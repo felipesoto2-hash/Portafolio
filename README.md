@@ -1,66 +1,92 @@
-Análisis de Datos del Banco Mundial (PCA y Clasificación)
-Este repositorio contiene un cuaderno de Jupyter (.ipynb) diseñado para extraer indicadores económicos directamente desde la base de datos del Banco Mundial, procesarlos mediante técnicas de reducción de dimensionalidad y preparar un modelo de análisis de datos.
+Predicción del Nivel de PIB: Comparativa de Modelos y PCA
+Este repositorio contiene la etapa final de un proyecto de ciencia de datos cuyo objetivo es predecir el nivel de Producto Interno Bruto (PIB) de distintos países utilizando datos del Banco Mundial.
 
+El núcleo de este análisis es comparar el rendimiento de modelos de clasificación (Regresión Logística y Random Forest) entrenados con datos originales frente a modelos entrenados con datos transformados mediante Análisis de Componentes Principales (PCA).
 
-🚀 Descripción del Proyecto
-El objetivo principal es construir una base de datos en memoria (df) que permita analizar la relación entre el PIB real y otras variables macroeconómicas como el desempleo. El flujo de trabajo incluye la descarga automatizada, estandarización de variables y un Análisis de Componentes Principales (PCA).
+📋 Descripción del Proyecto
+El flujo de trabajo automatizado en este cuaderno realiza las siguientes tareas:
 
+Ingesta de Datos: Descarga datos actualizados (año 2023) directamente desde la API del Banco Mundial (wbgapi).
 
-🛠️ Requisitos previos
-Para ejecutar este código correctamente, asegúrate de cumplir con lo siguiente:
+Limpieza y Preprocesamiento:
 
+Eliminación de columnas con >15% de datos faltantes.
 
-Internet: Conexión activa para realizar peticiones a la API.
+Imputación de valores faltantes (Mediana para numéricos, Moda para categóricos).
 
+Discretización del Target: La variable objetivo (PIB PPP) se convierte en 5 categorías: Low, Medium-Low, Medium, Medium-High, High.
 
+Reducción de Dimensionalidad: Aplicación de PCA sobre datos estandarizados para reducir las características originales a 7 componentes principales (explicando ~82.5% de la varianza).
 
-Google Colab: Se recomienda el uso de esta plataforma para evitar configuraciones locales.
+Modelado Predictivo: Entrenamiento de modelos de clasificación:
 
+Regresión Logística.
 
-Librerías: El código instala y utiliza wbgapi, pandas, numpy, matplotlib y scikit-learn.
+Random Forest.
 
+Evaluación Comparativa: Análisis de métricas (Accuracy, Precision, Recall, F1-Score) y Matrices de Confusión para determinar el impacto de la reducción de dimensionalidad.
 
+🛠️ Requisitos Previos
+Para ejecutar este código, necesitas un entorno de Python 3. Se recomienda Google Colab o Jupyter Notebook. Las librerías necesarias son:
 
-📋 Pasos del Proceso
-1. Extracción de Datos
-Se utiliza una función personalizada llamada descargar_en_chunks para gestionar la descarga de grandes volúmenes de datos sin saturar la conexión.
+wbgapi (API del Banco Mundial)
 
+pandas
 
-Indicadores: Se extraen variables como el PIB real (PPP constante) y el Desempleo total.
+numpy
 
+scikit-learn
 
-Rango: Datos históricos desde el año 2000 hasta el 2023.
+matplotlib
 
+seaborn
 
-2. Estandarización y PCA
-Para un análisis justo, los datos numéricos se escalan (media 0 y varianza 1). Luego, se aplica el Análisis de Componentes Principales (PCA) para:
+Instalación de dependencias
+La primera celda del cuaderno suele encargarse de la instalación, pero puedes hacerlo manualmente con:
 
-Reducir el número de variables originales.
+Bash
 
-Analizar la varianza explicada acumulada.
+pip install wbgapi pandas numpy scikit-learn matplotlib seaborn
+🚀 Instrucciones de Ejecución
+Sigue estos pasos para reproducir el análisis:
 
-Seleccionar los componentes óptimos que representen entre el 70% y el 90% de la información total.
+Abrir el Notebook: Carga el archivo .ipynb en Google Colab o tu entorno local.
 
-3. Discretización y Preparación Final
-La variable objetivo (PIB) se transforma de un valor numérico continuo a una variable categórica (Bajo, Medio, Alto) mediante cuantiles, facilitando futuros análisis de clasificación.
+Instalar Librerías: Ejecuta la primera celda de código para instalar wbgapi (si estás en Colab, es necesario).
 
-🖥️ Cómo ejecutarlo
-Abre Google Colab.
+Ejecutar Secuencialmente: Es crucial ejecutar las celdas en orden (de arriba a abajo), ya que el proceso construye el dataset paso a paso:
 
-Crea un Nuevo Cuaderno.
+Las primeras celdas descargan y limpian los datos en bruto (df_wb_raw).
 
-Copia y pega el código consolidado en una celda.
+Las celdas intermedias realizan la estandarización y el cálculo de PCA.
 
+Las celdas finales entrenan los modelos y generan los gráficos de evaluación.
 
+Interpretar Resultados: Al final del cuaderno, se imprime un DataFrame resumen comparando la precisión de los 4 escenarios (Logística/RF con datos Originales/PCA).
 
+📊 Resumen de Resultados
+Basado en la ejecución actual del código, se observan las siguientes conclusiones:
 
-Presiona el botón de Play a la izquierda de la celda.
+Mejor Modelo: El algoritmo Random Forest utilizando los datos originales obtuvo el mejor desempeño (aprox. 80% de precisión).
 
-Una vez finalizado, la base de datos "aparecerá" bajo el nombre de la variable df.
+Impacto de PCA:
 
+Regresión Logística: Se benefició ligeramente del uso de PCA, sugiriendo que la reducción de ruido ayudó al modelo lineal.
 
-⚠️ Errores Comunes
-ModuleNotFoundError: Falta instalar la librería wbgapi. Solución: Ejecutar !pip install wbgapi.
+Random Forest: Su rendimiento disminuyó drásticamente al usar PCA. Esto indica que el algoritmo de árboles aprovecha mejor la complejidad y las relaciones no lineales de las variables originales que las proyecciones lineales del PCA.
+
+📁 Estructura de Datos
+El script descarga indicadores relacionados con:
+
+Economía (PIB, Exportaciones, Valor agregado por sector).
+
+Demografía (Población, Crecimiento urbano).
+
+Sociales (Desempleo, Educación).
+
+Tecnología (Uso de internet).
+
+Nota: La variable objetivo es NY.GDP.MKTP.PP.KD.
 
 
 NameError: Se intentó usar la función de descarga antes de definirla. Solución: Ejecutar las celdas en orden secuencial.
